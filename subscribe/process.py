@@ -515,7 +515,9 @@ def aggregate(args: argparse.Namespace) -> None:
     display = not args.invisible
 
     # parse config
+    print("About to parse config")
     server = utils.trim(args.server) or os.environ.get("SUBSCRIBE_CONF", "").strip()
+    print("Config parsing finished")
     process_config = load_configs(
         url=server,
         only_check=args.check,
@@ -526,6 +528,7 @@ def aggregate(args: argparse.Namespace) -> None:
     storages = process_config.storage or {}
     pushtool = push.get_instance(engine=storages.get("engine", ""))
     retry = min(max(1, args.retry), 10)
+    print("1") # Debug
 
     # generate tasks
     tasks, groups, sites = assign(
@@ -537,6 +540,7 @@ def aggregate(args: argparse.Namespace) -> None:
         only_check=args.check,
         rigid=not args.flexible,
     )
+    print("Generated tasks") # Debug
     if not tasks:
         logger.error("cannot found any valid config, exit")
         sys.exit(0)
